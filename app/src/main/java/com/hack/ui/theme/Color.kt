@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 // Primary Brand Colors (WCAG AAA compliant: contrast ratio 7.5:1 against white)
 val GreenPrimary = Color(0xFF1B5E20)
+val GreenDark = Color(0xFF1B5E20)
 val GreenOnPrimary = Color(0xFFFFFFFF)
 val GreenContainer = Color(0xFFE8F5E9)
 val GreenOnContainer = Color(0xFF0F3911)
