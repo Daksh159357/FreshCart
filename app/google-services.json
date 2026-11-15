@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "505318812895",
+    "firebase_url": "https://hack-94d42-default-rtdb.firebaseio.com",
+    "project_id": "hack-94d42",
+    "storage_bucket": "hack-94d42.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:505318812895:android:278b76432dc313ac748d6a",
+        "android_client_info": {
+          "package_name": "com.hack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "505318812895-orp86es663cv0itmi9o4a2run3re9n5e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEKVhzq359N0cmk2poNZazKzSxLtq79Ow"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "505318812895-orp86es663cv0itmi9o4a2run3re9n5e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

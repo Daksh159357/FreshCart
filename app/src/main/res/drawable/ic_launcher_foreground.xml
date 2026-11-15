@@ -1,0 +1,14 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Shopping Cart outline & wheels -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M35,32 L40,32 L48,58 L72,58 L78,38 L42,38 L40.5,33 L35,33 Z M46,65 C43.8,65 42,66.8 42,69 C42,71.2 43.8,73 46,73 C48.2,73 50,71.2 50,69 C50,66.8 48.2,65 46,65 Z M70,65 C67.8,65 66,66.8 66,69 C66,71.2 67.8,73 70,73 C72.2,73 74,71.2 74,69 C74,66.8 72.2,65 70,65 Z"/>
+    <!-- Fresh sprout/leaf inside cart -->
+    <path
+        android:fillColor="#81C784"
+        android:pathData="M58,34 C58,34 65,30 68,36 C71,42 63,44 63,44 C63,44 64,48 60,49 C56,50 55,44 55,44 C55,44 51,46 50,42 C49,38 54,36 54,36 C54,36 54,32 58,34 Z"/>
+</vector>
