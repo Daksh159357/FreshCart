@@ -17,7 +17,7 @@ This is the developer reference and architecture documentation for the **FreshCa
    - `name` (String): Product display title (e.g. `Fresh Red Apples`)
    - `description` (String): Comprehensive product description
    - `category` (String): Category name (e.g. `Fruits`, `Vegetables`, `Dairy & Eggs`)
-   - `price` (Double): Unit price (e.g. `2.99`)
+   - `price` (Double): Unit price (e.g. `149.00`)
    - `stock` (Int): Current inventory count (`> 5`: In Stock, `1..5`: Low Stock, `<= 0`: Out of Stock)
    - `imageUrl` (String): Direct raw image URL hosted on GitHub
    - `createdAt` (Long): Timestamp (epoch milliseconds)
