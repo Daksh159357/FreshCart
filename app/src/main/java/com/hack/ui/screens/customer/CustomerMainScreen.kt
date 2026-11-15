@@ -66,13 +66,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -82,16 +80,16 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.hack.data.model.Product
-import com.hack.ui.theme.GreenContainer
-import com.hack.ui.theme.GreenDark
-import com.hack.ui.theme.GreenPrimary
-import com.hack.ui.theme.StockInColor
-import com.hack.ui.theme.StockLowColor
-import com.hack.ui.theme.StockOutColor
+import com.hack.ui.theme.BadgeStockInBg
+import com.hack.ui.theme.BadgeStockInText
+import com.hack.ui.theme.BadgeStockLowBg
+import com.hack.ui.theme.BadgeStockLowText
+import com.hack.ui.theme.BadgeStockOutBg
+import com.hack.ui.theme.BadgeStockOutText
 import com.hack.ui.viewmodel.CustomerViewModel
 import com.hack.ui.viewmodel.ProductSortOption
+import com.hack.util.PriceFormatter
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -103,12 +101,10 @@ fun CustomerMainScreen(
     val cartCount by viewModel.cartItemCount.collectAsState()
     val isConnected by viewModel.isConnected.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
     var confirmedOrderId by remember { mutableStateOf<String?>(null) }
     val selectedProductForDetail by viewModel.selectedProductForDetail.collectAsState()
 
-    // Listen for feedback messages & order placed event
     LaunchedEffect(Unit) {
         viewModel.userMessage.collectLatest { msg ->
             snackbarHostState.showSnackbar(msg)
@@ -134,14 +130,14 @@ fun CustomerMainScreen(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Surface(
                             shape = CircleShape,
-                            color = GreenPrimary,
+                            color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(32.dp)
                         ) {
                             Box(contentAlignment = Alignment.Center) {
                                 Icon(
                                     imageVector = Icons.Default.ShoppingCart,
                                     contentDescription = null,
-                                    tint = Color.White,
+                                    tint = MaterialTheme.colorScheme.onPrimary,
                                     modifier = Modifier.size(18.dp)
                                 )
                             }
@@ -149,9 +145,9 @@ fun CustomerMainScreen(
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "FreshCart",
+                            color = MaterialTheme.colorScheme.primary,
                             style = MaterialTheme.typography.titleLarge.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = GreenDark
+                                fontWeight = FontWeight.Bold
                             )
                         )
                     }
@@ -161,8 +157,14 @@ fun CustomerMainScreen(
                         BadgedBox(
                             badge = {
                                 if (cartCount > 0) {
-                                    Badge(containerColor = GreenPrimary) {
-                                        Text("$cartCount", color = Color.White)
+                                    Badge(
+                                        containerColor = MaterialTheme.colorScheme.primary,
+                                        contentColor = MaterialTheme.colorScheme.onPrimary
+                                    ) {
+                                        Text(
+                                            text = "$cartCount",
+                                            color = MaterialTheme.colorScheme.onPrimary
+                                        )
                                     }
                                 }
                             }
@@ -170,17 +172,20 @@ fun CustomerMainScreen(
                             Icon(
                                 imageVector = Icons.Default.ShoppingCart,
                                 contentDescription = "Cart",
-                                tint = GreenDark
+                                tint = MaterialTheme.colorScheme.onSurface
                             )
                         }
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface
+                )
             )
         },
         bottomBar = {
             NavigationBar(
-                containerColor = Color.White,
+                containerColor = MaterialTheme.colorScheme.surface,
                 tonalElevation = 8.dp
             ) {
                 NavigationBarItem(
@@ -189,9 +194,11 @@ fun CustomerMainScreen(
                     icon = { Icon(Icons.Default.Storefront, contentDescription = "Shop") },
                     label = { Text("Shop") },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = GreenPrimary,
-                        selectedTextColor = GreenPrimary,
-                        indicatorColor = GreenContainer
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        indicatorColor = MaterialTheme.colorScheme.primaryContainer
                     )
                 )
 
@@ -202,8 +209,14 @@ fun CustomerMainScreen(
                         BadgedBox(
                             badge = {
                                 if (cartCount > 0) {
-                                    Badge(containerColor = GreenPrimary) {
-                                        Text("$cartCount", color = Color.White)
+                                    Badge(
+                                        containerColor = MaterialTheme.colorScheme.primary,
+                                        contentColor = MaterialTheme.colorScheme.onPrimary
+                                    ) {
+                                        Text(
+                                            text = "$cartCount",
+                                            color = MaterialTheme.colorScheme.onPrimary
+                                        )
                                     }
                                 }
                             }
@@ -213,9 +226,11 @@ fun CustomerMainScreen(
                     },
                     label = { Text("Cart") },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = GreenPrimary,
-                        selectedTextColor = GreenPrimary,
-                        indicatorColor = GreenContainer
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        indicatorColor = MaterialTheme.colorScheme.primaryContainer
                     )
                 )
 
@@ -225,9 +240,11 @@ fun CustomerMainScreen(
                     icon = { Icon(Icons.Default.ReceiptLong, contentDescription = "Orders") },
                     label = { Text("Orders") },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = GreenPrimary,
-                        selectedTextColor = GreenPrimary,
-                        indicatorColor = GreenContainer
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        indicatorColor = MaterialTheme.colorScheme.primaryContainer
                     )
                 )
 
@@ -237,9 +254,11 @@ fun CustomerMainScreen(
                     icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
                     label = { Text("Profile") },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = GreenPrimary,
-                        selectedTextColor = GreenPrimary,
-                        indicatorColor = GreenContainer
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        indicatorColor = MaterialTheme.colorScheme.primaryContainer
                     )
                 )
             }
@@ -311,7 +330,7 @@ fun CustomerShopTab(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF8FAF8))
+            .background(MaterialTheme.colorScheme.background)
     ) {
         // Search bar & Sort Button Row
         Row(
@@ -323,12 +342,17 @@ fun CustomerShopTab(
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { viewModel.onSearchQueryChanged(it) },
-                placeholder = { Text("Search fresh groceries...") },
+                placeholder = {
+                    Text(
+                        "Search fresh groceries...",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Search,
                         contentDescription = "Search",
-                        tint = Color(0xFF6B7280)
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 },
                 trailingIcon = {
@@ -337,7 +361,7 @@ fun CustomerShopTab(
                             Icon(
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = "Clear",
-                                tint = Color(0xFF6B7280)
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -348,10 +372,12 @@ fun CustomerShopTab(
                     .height(52.dp),
                 shape = RoundedCornerShape(14.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedBorderColor = GreenPrimary,
-                    unfocusedBorderColor = Color(0xFFE5E7EB)
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline
                 )
             )
 
@@ -363,12 +389,12 @@ fun CustomerShopTab(
                     onClick = { sortMenuExpanded = true },
                     modifier = Modifier
                         .size(52.dp)
-                        .background(Color.White, RoundedCornerShape(14.dp))
+                        .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(14.dp))
                 ) {
                     Icon(
                         imageVector = Icons.Default.FilterList,
                         contentDescription = "Sort",
-                        tint = GreenDark
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
 
@@ -378,7 +404,12 @@ fun CustomerShopTab(
                 ) {
                     ProductSortOption.values().forEach { option ->
                         DropdownMenuItem(
-                            text = { Text(option.title) },
+                            text = {
+                                Text(
+                                    option.title,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            },
                             onClick = {
                                 viewModel.onSortOptionChanged(option)
                                 sortMenuExpanded = false
@@ -388,7 +419,7 @@ fun CustomerShopTab(
                                     Icon(
                                         imageVector = Icons.Default.Check,
                                         contentDescription = null,
-                                        tint = GreenPrimary
+                                        tint = MaterialTheme.colorScheme.primary
                                     )
                                 }
                             }
@@ -415,13 +446,18 @@ fun CustomerShopTab(
                 FilterChip(
                     selected = isSelected,
                     onClick = { viewModel.onCategorySelected(categoryName) },
-                    label = { Text(categoryName, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal) },
+                    label = {
+                        Text(
+                            text = categoryName,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                        )
+                    },
                     shape = RoundedCornerShape(20.dp),
                     colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = GreenPrimary,
-                        selectedLabelColor = Color.White,
-                        containerColor = Color.White,
-                        labelColor = Color(0xFF374151)
+                        selectedContainerColor = MaterialTheme.colorScheme.primary,
+                        selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        labelColor = MaterialTheme.colorScheme.onSurface
                     )
                 )
             }
@@ -447,7 +483,8 @@ fun CustomerShopTab(
                     ) {
                         Text(
                             text = "No matching groceries found.",
-                            style = MaterialTheme.typography.bodyLarge.copy(color = Color(0xFF6B7280))
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     }
                 }
@@ -478,7 +515,7 @@ fun ProductCard(
             .alpha(if (isOut) 0.65f else 1.0f)
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(10.dp)) {
@@ -488,7 +525,7 @@ fun ProductCard(
                     .fillMaxWidth()
                     .aspectRatio(1.15f)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFFF3F4F6)),
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center
             ) {
                 AsyncImage(
@@ -501,11 +538,11 @@ fun ProductCard(
                     modifier = Modifier.fillMaxSize()
                 )
 
-                // Stock Badge Pill in top-left
+                // Stock Badge Pill (WCAG AA compliant)
                 val (badgeBg, badgeFg, badgeText) = when {
-                    product.isOutOfStock -> Triple(Color(0xFFFFEBEE), StockOutColor, "Out of Stock")
-                    product.isLowStock -> Triple(Color(0xFFFFF3E0), StockLowColor, "Low Stock")
-                    else -> Triple(Color(0xFFE8F5E9), StockInColor, "In Stock")
+                    product.isOutOfStock -> Triple(BadgeStockOutBg, BadgeStockOutText, "Out of Stock")
+                    product.isLowStock -> Triple(BadgeStockLowBg, BadgeStockLowText, "Low Stock")
+                    else -> Triple(BadgeStockInBg, BadgeStockInText, "In Stock")
                 }
 
                 Surface(
@@ -532,6 +569,7 @@ fun ProductCard(
             // Title
             Text(
                 text = product.name,
+                color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleSmall.copy(
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
@@ -543,8 +581,8 @@ fun ProductCard(
             // Category
             Text(
                 text = product.category.ifBlank { "Grocery" },
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodySmall.copy(
-                    color = Color(0xFF6B7280),
                     fontSize = 11.sp
                 )
             )
@@ -558,10 +596,10 @@ fun ProductCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "₹${"%.2f".format(product.price)}",
+                    text = PriceFormatter.format(product.price),
+                    color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.ExtraBold,
-                        color = GreenDark
+                        fontWeight = FontWeight.ExtraBold
                     )
                 )
 
@@ -571,14 +609,17 @@ fun ProductCard(
                     shape = RoundedCornerShape(10.dp),
                     contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = GreenPrimary,
-                        disabledContainerColor = Color(0xFFE5E7EB)
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                        disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
                     modifier = Modifier.height(34.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.AddShoppingCart,
                         contentDescription = "Add",
+                        tint = if (!isOut) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(16.dp)
                     )
                 }

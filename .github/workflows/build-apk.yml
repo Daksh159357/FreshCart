@@ -2,6 +2,8 @@ name: Build FreshCart Android APK
 
 on:
   push:
+    branches: [ main, "fix/**" ]
+  pull_request:
     branches: [ main ]
   workflow_dispatch:
 
@@ -44,11 +46,12 @@ jobs:
           path: build-artifacts/FreshCart-v1.0.apk
           retention-days: 30
 
-      - name: Create GitHub Release
+      - name: Create or Update GitHub Release
+        if: github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create v1.0.1 build-artifacts/FreshCart-v1.0.apk \
-            --title "FreshCart v1.0.1 — Indian Rupee (₹) Edition" \
-            --notes "FreshCart Grocery Buying App for Android with Indian Rupee (₹) currency support and live Firebase Realtime sync. Built via GitHub Actions CI/CD." \
-            --target main || gh release upload v1.0.1 build-artifacts/FreshCart-v1.0.apk --clobber
+          gh release create v1.0.2 build-artifacts/FreshCart-v1.0.apk \
+            --title "FreshCart v1.0.2 — High Contrast & WCAG AA Edition" \
+            --notes "FreshCart Grocery Buying App with full WCAG AA contrast compliance, light-mode enforcement, and Indian Rupee (₹) currency support." \
+            --target main || gh release upload v1.0.2 build-artifacts/FreshCart-v1.0.apk --clobber

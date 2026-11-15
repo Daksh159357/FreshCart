@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -60,12 +59,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.hack.ui.theme.GreenContainer
-import com.hack.ui.theme.GreenDark
-import com.hack.ui.theme.GreenPrimary
-import com.hack.ui.theme.StockLowColor
-import com.hack.ui.theme.StockOutColor
+import com.hack.ui.theme.BadgeStockLowBg
+import com.hack.ui.theme.BadgeStockLowText
+import com.hack.ui.theme.BadgeStockOutBg
+import com.hack.ui.theme.BadgeStockOutText
 import com.hack.ui.viewmodel.AdminDashboardStats
 import com.hack.ui.viewmodel.AdminViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -93,14 +90,14 @@ fun AdminDashboardScreen(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Surface(
                             shape = CircleShape,
-                            color = GreenDark,
+                            color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(32.dp)
                         ) {
                             Box(contentAlignment = Alignment.Center) {
                                 Icon(
                                     imageVector = Icons.Default.AdminPanelSettings,
                                     contentDescription = null,
-                                    tint = Color.White,
+                                    tint = MaterialTheme.colorScheme.onPrimary,
                                     modifier = Modifier.size(18.dp)
                                 )
                             }
@@ -108,9 +105,9 @@ fun AdminDashboardScreen(
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "FreshCart Admin",
+                            color = MaterialTheme.colorScheme.primary,
                             style = MaterialTheme.typography.titleLarge.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = GreenDark
+                                fontWeight = FontWeight.Bold
                             )
                         )
                     }
@@ -120,16 +117,19 @@ fun AdminDashboardScreen(
                         Icon(
                             imageVector = Icons.Default.Logout,
                             contentDescription = "Switch Role / Log Out",
-                            tint = Color(0xFFDC2626)
+                            tint = MaterialTheme.colorScheme.error
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface
+                )
             )
         },
         bottomBar = {
             NavigationBar(
-                containerColor = Color.White,
+                containerColor = MaterialTheme.colorScheme.surface,
                 tonalElevation = 8.dp
             ) {
                 NavigationBarItem(
@@ -138,9 +138,11 @@ fun AdminDashboardScreen(
                     icon = { Icon(Icons.Default.Dashboard, contentDescription = "Overview") },
                     label = { Text("Overview") },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = GreenPrimary,
-                        selectedTextColor = GreenPrimary,
-                        indicatorColor = GreenContainer
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        indicatorColor = MaterialTheme.colorScheme.primaryContainer
                     )
                 )
 
@@ -151,8 +153,11 @@ fun AdminDashboardScreen(
                         BadgedBox(
                             badge = {
                                 if (stats.outOfStockCount > 0) {
-                                    Badge(containerColor = StockOutColor) {
-                                        Text("${stats.outOfStockCount}", color = Color.White)
+                                    Badge(
+                                        containerColor = BadgeStockOutText,
+                                        contentColor = MaterialTheme.colorScheme.onPrimary
+                                    ) {
+                                        Text("${stats.outOfStockCount}", color = MaterialTheme.colorScheme.onPrimary)
                                     }
                                 }
                             }
@@ -162,9 +167,11 @@ fun AdminDashboardScreen(
                     },
                     label = { Text("Products") },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = GreenPrimary,
-                        selectedTextColor = GreenPrimary,
-                        indicatorColor = GreenContainer
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        indicatorColor = MaterialTheme.colorScheme.primaryContainer
                     )
                 )
 
@@ -175,8 +182,11 @@ fun AdminDashboardScreen(
                         BadgedBox(
                             badge = {
                                 if (stats.pendingOrdersCount > 0) {
-                                    Badge(containerColor = Color(0xFFED6C02)) {
-                                        Text("${stats.pendingOrdersCount}", color = Color.White)
+                                    Badge(
+                                        containerColor = BadgeStockLowText,
+                                        contentColor = MaterialTheme.colorScheme.onPrimary
+                                    ) {
+                                        Text("${stats.pendingOrdersCount}", color = MaterialTheme.colorScheme.onPrimary)
                                     }
                                 }
                             }
@@ -186,9 +196,11 @@ fun AdminDashboardScreen(
                     },
                     label = { Text("Orders") },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = GreenPrimary,
-                        selectedTextColor = GreenPrimary,
-                        indicatorColor = GreenContainer
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        indicatorColor = MaterialTheme.colorScheme.primaryContainer
                     )
                 )
 
@@ -198,9 +210,11 @@ fun AdminDashboardScreen(
                     icon = { Icon(Icons.Default.Category, contentDescription = "Categories") },
                     label = { Text("Categories") },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = GreenPrimary,
-                        selectedTextColor = GreenPrimary,
-                        indicatorColor = GreenContainer
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        indicatorColor = MaterialTheme.colorScheme.primaryContainer
                     )
                 )
             }
@@ -233,16 +247,18 @@ fun AdminOverviewTab(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF8FAF8))
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
         Text(
             text = "Store Performance",
+            color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
         )
         Text(
             text = "Live updates across catalog, inventory, and customer orders.",
-            style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF6B7280))
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodySmall
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -258,8 +274,8 @@ fun AdminOverviewTab(
                     title = "Total Products",
                     value = "${stats.totalProducts}",
                     icon = Icons.Default.Inventory2,
-                    tint = GreenPrimary,
-                    bgColor = GreenContainer,
+                    tint = MaterialTheme.colorScheme.primary,
+                    bgColor = MaterialTheme.colorScheme.primaryContainer,
                     onClick = { onNavigateToTab(1) }
                 )
             }
@@ -269,8 +285,8 @@ fun AdminOverviewTab(
                     title = "Pending Orders",
                     value = "${stats.pendingOrdersCount}",
                     icon = Icons.Default.PendingActions,
-                    tint = Color(0xFFED6C02),
-                    bgColor = Color(0xFFFFF3E0),
+                    tint = BadgeStockLowText,
+                    bgColor = BadgeStockLowBg,
                     onClick = { onNavigateToTab(2) }
                 )
             }
@@ -280,8 +296,8 @@ fun AdminOverviewTab(
                     title = "Total Orders",
                     value = "${stats.totalOrders}",
                     icon = Icons.Default.ReceiptLong,
-                    tint = Color(0xFF0288D1),
-                    bgColor = Color(0xFFE1F5FE),
+                    tint = MaterialTheme.colorScheme.primary,
+                    bgColor = MaterialTheme.colorScheme.primaryContainer,
                     onClick = { onNavigateToTab(2) }
                 )
             }
@@ -291,8 +307,8 @@ fun AdminOverviewTab(
                     title = "Out of Stock",
                     value = "${stats.outOfStockCount}",
                     icon = Icons.Default.ProductionQuantityLimits,
-                    tint = StockOutColor,
-                    bgColor = Color(0xFFFFEBEE),
+                    tint = BadgeStockOutText,
+                    bgColor = BadgeStockOutBg,
                     onClick = { onNavigateToTab(1) }
                 )
             }
@@ -302,8 +318,8 @@ fun AdminOverviewTab(
                     title = "Low Stock (≤5)",
                     value = "${stats.lowStockCount}",
                     icon = Icons.Default.WarningAmber,
-                    tint = StockLowColor,
-                    bgColor = Color(0xFFFFF3E0),
+                    tint = BadgeStockLowText,
+                    bgColor = BadgeStockLowBg,
                     onClick = { onNavigateToTab(1) }
                 )
             }
@@ -313,6 +329,7 @@ fun AdminOverviewTab(
 
         Text(
             text = "Quick Management",
+            color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
         )
 
@@ -321,7 +338,7 @@ fun AdminOverviewTab(
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
             Column {
@@ -359,7 +376,7 @@ fun StatCard(
             .fillMaxWidth()
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
@@ -383,15 +400,16 @@ fun StatCard(
 
             Text(
                 text = value,
+                color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.headlineMedium.copy(
-                    fontWeight = FontWeight.ExtraBold,
-                    color = Color(0xFF1F2937)
+                    fontWeight = FontWeight.ExtraBold
                 )
             )
 
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF6B7280))
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.bodySmall
             )
         }
     }
@@ -417,14 +435,20 @@ fun AdminQuickLinkRow(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
+                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
                     text = subtitle,
-                    style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF6B7280))
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
-            Icon(imageVector = Icons.Default.ChevronRight, contentDescription = null, tint = Color(0xFF9CA3AF))
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }

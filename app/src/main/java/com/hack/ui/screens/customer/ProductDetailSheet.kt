@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -38,7 +37,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -47,13 +45,13 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.hack.data.model.Product
-import com.hack.ui.theme.GreenContainer
-import com.hack.ui.theme.GreenDark
-import com.hack.ui.theme.GreenOnContainer
-import com.hack.ui.theme.GreenPrimary
-import com.hack.ui.theme.StockInColor
-import com.hack.ui.theme.StockLowColor
-import com.hack.ui.theme.StockOutColor
+import com.hack.ui.theme.BadgeStockInBg
+import com.hack.ui.theme.BadgeStockInText
+import com.hack.ui.theme.BadgeStockLowBg
+import com.hack.ui.theme.BadgeStockLowText
+import com.hack.ui.theme.BadgeStockOutBg
+import com.hack.ui.theme.BadgeStockOutText
+import com.hack.util.PriceFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,7 +66,7 @@ fun ProductDetailSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.surface,
         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
     ) {
         Column(
@@ -87,18 +85,22 @@ fun ProductDetailSheet(
                 // Category Chip
                 Surface(
                     shape = RoundedCornerShape(8.dp),
-                    color = GreenContainer
+                    color = MaterialTheme.colorScheme.primaryContainer
                 ) {
                     Text(
                         text = product.category.ifBlank { "Grocery" },
-                        color = GreenOnContainer,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                         style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                     )
                 }
 
                 IconButton(onClick = onDismiss) {
-                    Icon(imageVector = Icons.Default.Close, contentDescription = "Close")
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close",
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
                 }
             }
 
@@ -110,7 +112,7 @@ fun ProductDetailSheet(
                     .fillMaxWidth()
                     .height(240.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(Color(0xFFF3F4F6)),
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center
             ) {
                 AsyncImage(
@@ -131,9 +133,9 @@ fun ProductDetailSheet(
             // Product Name
             Text(
                 text = product.name,
+                color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.headlineMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1F2937)
+                    fontWeight = FontWeight.Bold
                 )
             )
 
@@ -146,18 +148,18 @@ fun ProductDetailSheet(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "₹${"%.2f".format(product.price)}",
+                    text = PriceFormatter.format(product.price),
+                    color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.headlineMedium.copy(
-                        fontWeight = FontWeight.ExtraBold,
-                        color = GreenDark
+                        fontWeight = FontWeight.ExtraBold
                     )
                 )
 
-                // Stock Badge
+                // Stock Badge (WCAG AA compliant contrast)
                 val (badgeBg, badgeFg, badgeText) = when {
-                    product.isOutOfStock -> Triple(Color(0xFFFFEBEE), StockOutColor, "Out of Stock")
-                    product.isLowStock -> Triple(Color(0xFFFFF3E0), StockLowColor, "Low Stock (${product.stock} left)")
-                    else -> Triple(Color(0xFFE8F5E9), StockInColor, "In Stock (${product.stock})")
+                    product.isOutOfStock -> Triple(BadgeStockOutBg, BadgeStockOutText, "Out of Stock")
+                    product.isLowStock -> Triple(BadgeStockLowBg, BadgeStockLowText, "Low Stock (${product.stock} left)")
+                    else -> Triple(BadgeStockInBg, BadgeStockInText, "In Stock (${product.stock})")
                 }
 
                 Surface(
@@ -178,13 +180,14 @@ fun ProductDetailSheet(
             // Description
             Text(
                 text = "Product Details",
+                color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = product.description.ifBlank { "Fresh, high quality grocery item carefully sourced." },
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    color = Color(0xFF4B5563),
                     lineHeight = 22.sp
                 )
             )
@@ -200,13 +203,14 @@ fun ProductDetailSheet(
                 ) {
                     Text(
                         text = "Quantity",
+                        color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
                     )
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .background(Color(0xFFF3F4F6), RoundedCornerShape(12.dp))
+                            .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(12.dp))
                             .padding(horizontal = 6.dp, vertical = 4.dp)
                     ) {
                         IconButton(
@@ -214,11 +218,16 @@ fun ProductDetailSheet(
                             enabled = quantity > 1,
                             modifier = Modifier.size(36.dp)
                         ) {
-                            Icon(imageVector = Icons.Default.Remove, contentDescription = "Decrease")
+                            Icon(
+                                imageVector = Icons.Default.Remove,
+                                contentDescription = "Decrease",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
                         }
 
                         Text(
                             text = "$quantity",
+                            color = MaterialTheme.colorScheme.onSurface,
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
@@ -232,7 +241,11 @@ fun ProductDetailSheet(
                             enabled = quantity < product.stock,
                             modifier = Modifier.size(36.dp)
                         ) {
-                            Icon(imageVector = Icons.Default.Add, contentDescription = "Increase")
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "Increase",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
                         }
                     }
                 }
@@ -249,16 +262,21 @@ fun ProductDetailSheet(
                         .fillMaxWidth()
                         .height(54.dp),
                     shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
                     Icon(
                         imageVector = Icons.Default.ShoppingCart,
                         contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Add to Cart • ₹${"%.2f".format(product.price * quantity)}",
+                        text = "Add to Cart • ${PriceFormatter.format(product.price * quantity)}",
+                        color = MaterialTheme.colorScheme.onPrimary,
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                     )
                 }
@@ -266,12 +284,12 @@ fun ProductDetailSheet(
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    color = Color(0xFFF3F4F6)
+                    color = MaterialTheme.colorScheme.surfaceVariant
                 ) {
                     Text(
                         text = "This item is currently out of stock.",
                         modifier = Modifier.padding(16.dp),
-                        color = Color(0xFF9CA3AF),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )

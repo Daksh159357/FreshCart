@@ -1,7 +1,6 @@
 package com.hack.ui.screens.customer
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,11 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.hack.ui.theme.DividerColor
-import com.hack.ui.theme.GreenContainer
-import com.hack.ui.theme.GreenDark
-import com.hack.ui.theme.GreenPrimary
 
 @Composable
 fun ProfileScreen(
@@ -51,7 +45,7 @@ fun ProfileScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF8FAF8))
+            .background(MaterialTheme.colorScheme.background)
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -60,14 +54,14 @@ fun ProfileScreen(
         // Avatar
         Surface(
             shape = CircleShape,
-            color = GreenContainer,
+            color = MaterialTheme.colorScheme.primaryContainer,
             modifier = Modifier.size(80.dp)
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = null,
-                    tint = GreenDark,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(44.dp)
                 )
             }
@@ -77,6 +71,7 @@ fun ProfileScreen(
 
         Text(
             text = "FreshCart Customer",
+            color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
         )
 
@@ -84,13 +79,13 @@ fun ProfileScreen(
 
         Surface(
             shape = RoundedCornerShape(8.dp),
-            color = Color(0xFFE5E7EB)
+            color = MaterialTheme.colorScheme.surfaceVariant
         ) {
             Text(
                 text = "ID: $customerId",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.labelMedium.copy(
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF374151)
+                    fontWeight = FontWeight.SemiBold
                 ),
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
             )
@@ -102,7 +97,7 @@ fun ProfileScreen(
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
             Column(modifier = Modifier.padding(vertical = 8.dp)) {
@@ -113,7 +108,10 @@ fun ProfileScreen(
                     onClick = onNavigateOrders
                 )
 
-                Divider(color = DividerColor, modifier = Modifier.padding(horizontal = 16.dp))
+                Divider(
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
 
                 ProfileOptionRow(
                     icon = Icons.Default.Storefront,
@@ -122,7 +120,10 @@ fun ProfileScreen(
                     onClick = {}
                 )
 
-                Divider(color = DividerColor, modifier = Modifier.padding(horizontal = 16.dp))
+                Divider(
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f),
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
 
                 ProfileOptionRow(
                     icon = Icons.Default.HelpOutline,
@@ -146,13 +147,13 @@ fun ProfileScreen(
             Icon(
                 imageVector = Icons.Default.Logout,
                 contentDescription = null,
-                tint = Color(0xFFDC2626),
+                tint = MaterialTheme.colorScheme.error,
                 modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "Switch Role / Log Out",
-                color = Color(0xFFDC2626),
+                color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
             )
         }
@@ -166,7 +167,7 @@ fun ProfileOptionRow(
     subtitle: String,
     onClick: () -> Unit
 ) {
-    androidx.compose.material3.Surface(
+    Surface(
         onClick = onClick,
         color = Color.Transparent,
         modifier = Modifier.fillMaxWidth()
@@ -179,14 +180,14 @@ fun ProfileOptionRow(
         ) {
             Surface(
                 shape = RoundedCornerShape(10.dp),
-                color = Color(0xFFF3F4F6),
+                color = MaterialTheme.colorScheme.surfaceVariant,
                 modifier = Modifier.size(40.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
                         imageVector = icon,
                         contentDescription = null,
-                        tint = GreenPrimary,
+                        tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(22.dp)
                     )
                 }
@@ -197,18 +198,20 @@ fun ProfileOptionRow(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
+                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
                     text = subtitle,
-                    style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF6B7280))
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
 
             Icon(
                 imageVector = Icons.Default.ChevronRight,
                 contentDescription = null,
-                tint = Color(0xFF9CA3AF)
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }

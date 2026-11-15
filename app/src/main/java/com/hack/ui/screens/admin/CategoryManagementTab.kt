@@ -40,11 +40,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.hack.data.model.Category
+import com.hack.ui.theme.BadgeStockOutText
 import com.hack.ui.theme.GreenContainer
 import com.hack.ui.theme.GreenDark
 import com.hack.ui.theme.GreenPrimary
@@ -68,7 +67,7 @@ fun CategoryManagementTab(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF8FAF8))
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
         Row(
@@ -78,7 +77,8 @@ fun CategoryManagementTab(
         ) {
             Text(
                 text = "Product Categories (${categories.size})",
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onBackground
             )
 
             Button(
@@ -87,7 +87,10 @@ fun CategoryManagementTab(
                     showAddDialog = true
                 },
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(modifier = Modifier.width(4.dp))
@@ -107,7 +110,7 @@ fun CategoryManagementTab(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(14.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
                     Row(
@@ -136,11 +139,14 @@ fun CategoryManagementTab(
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = cat.name,
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
                                 text = "$itemCount products in this category",
-                                style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF6B7280))
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             )
                         }
 
@@ -150,13 +156,21 @@ fun CategoryManagementTab(
                                 renameInput = cat.name
                             }
                         ) {
-                            Icon(imageVector = Icons.Default.Edit, contentDescription = "Rename", tint = GreenPrimary)
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = "Rename",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
                         }
 
                         IconButton(
                             onClick = { categoryToDelete = cat }
                         ) {
-                            Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete", tint = Color(0xFFDC2626))
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "Delete",
+                                tint = BadgeStockOutText
+                            )
                         }
                     }
                 }
@@ -169,8 +183,14 @@ fun CategoryManagementTab(
         AlertDialog(
             onDismissRequest = { showAddDialog = false },
             shape = RoundedCornerShape(16.dp),
-            containerColor = Color.White,
-            title = { Text("Add Category", fontWeight = FontWeight.Bold) },
+            containerColor = MaterialTheme.colorScheme.surface,
+            title = {
+                Text(
+                    text = "Add Category",
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            },
             text = {
                 OutlinedTextField(
                     value = newCategoryName,
@@ -189,14 +209,17 @@ fun CategoryManagementTab(
                             }
                         }
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
                     Text("Add")
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showAddDialog = false }) {
-                    Text("Cancel")
+                    Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         )
@@ -207,8 +230,14 @@ fun CategoryManagementTab(
         AlertDialog(
             onDismissRequest = { categoryToRename = null },
             shape = RoundedCornerShape(16.dp),
-            containerColor = Color.White,
-            title = { Text("Rename Category", fontWeight = FontWeight.Bold) },
+            containerColor = MaterialTheme.colorScheme.surface,
+            title = {
+                Text(
+                    text = "Rename Category",
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            },
             text = {
                 OutlinedTextField(
                     value = renameInput,
@@ -227,14 +256,17 @@ fun CategoryManagementTab(
                             }
                         }
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
                     Text("Save")
                 }
             },
             dismissButton = {
                 TextButton(onClick = { categoryToRename = null }) {
-                    Text("Cancel")
+                    Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         )
@@ -245,10 +277,19 @@ fun CategoryManagementTab(
         AlertDialog(
             onDismissRequest = { categoryToDelete = null },
             shape = RoundedCornerShape(16.dp),
-            containerColor = Color.White,
-            title = { Text("Delete Category", fontWeight = FontWeight.Bold) },
+            containerColor = MaterialTheme.colorScheme.surface,
+            title = {
+                Text(
+                    text = "Delete Category",
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            },
             text = {
-                Text("Delete '${cat.name}'? Existing products will not be deleted; they will be moved to 'Uncategorized'.")
+                Text(
+                    text = "Delete '${cat.name}'? Existing products will not be deleted; they will be moved to 'Uncategorized'.",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             },
             confirmButton = {
                 Button(
@@ -256,14 +297,17 @@ fun CategoryManagementTab(
                         viewModel.deleteCategory(cat)
                         categoryToDelete = null
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFDC2626))
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = BadgeStockOutText,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
                     Text("Delete")
                 }
             },
             dismissButton = {
                 TextButton(onClick = { categoryToDelete = null }) {
-                    Text("Cancel")
+                    Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         )

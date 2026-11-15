@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -38,20 +37,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.request.ImageRequest
 import com.hack.data.model.Category
 import com.hack.data.model.Product
-import com.hack.ui.theme.GreenDark
-import com.hack.ui.theme.GreenPrimary
+import com.hack.ui.theme.BadgeStockOutBg
+import com.hack.ui.theme.BadgeStockOutText
+import com.hack.util.PriceFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,13 +72,13 @@ fun AddEditProductDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = RoundedCornerShape(20.dp),
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.surface,
         title = {
             Text(
                 text = if (initialProduct == null) "Add New Product" else "Edit Product",
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    color = GreenDark
+                    color = MaterialTheme.colorScheme.primary
                 )
             )
         },
@@ -125,7 +123,12 @@ fun AddEditProductDialog(
                     ) {
                         categories.forEach { cat ->
                             DropdownMenuItem(
-                                text = { Text(cat.name) },
+                                text = {
+                                    Text(
+                                        text = cat.name,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                },
                                 onClick = {
                                     selectedCategory = cat.name
                                     categoryExpanded = false
@@ -142,7 +145,7 @@ fun AddEditProductDialog(
                     OutlinedTextField(
                         value = priceStr,
                         onValueChange = { priceStr = it },
-                        label = { Text("Price (₹) *") },
+                        label = { Text("Price (${PriceFormatter.CURRENCY_SYMBOL}) *") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         singleLine = true,
                         modifier = Modifier.weight(1f),
@@ -176,7 +179,7 @@ fun AddEditProductDialog(
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                // Image URL (labeled "Product Image Link" or "Image URL", no mention of GitHub!)
+                // Image URL
                 OutlinedTextField(
                     value = imageUrl,
                     onValueChange = {
@@ -184,7 +187,12 @@ fun AddEditProductDialog(
                         imageLoadFailed = false
                     },
                     label = { Text("Product Image Link *") },
-                    placeholder = { Text("https://...") },
+                    placeholder = {
+                        Text(
+                            text = "https://...",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp)
@@ -198,7 +206,7 @@ fun AddEditProductDialog(
                         .fillMaxWidth()
                         .height(120.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(Color(0xFFF3F4F6)),
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
                     contentAlignment = Alignment.Center
                 ) {
                     if (imageUrl.isNotBlank() && imageUrl.startsWith("https://", ignoreCase = true)) {
@@ -217,13 +225,13 @@ fun AddEditProductDialog(
 
                         if (imageLoadFailed) {
                             Surface(
-                                color = Color(0xCC000000),
+                                color = BadgeStockOutBg,
                                 shape = RoundedCornerShape(8.dp),
                                 modifier = Modifier.padding(8.dp)
                             ) {
                                 Text(
                                     text = "Image could not be loaded. Please check the link.",
-                                    color = Color(0xFFEF4444),
+                                    color = BadgeStockOutText,
                                     style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                                 )
@@ -234,13 +242,15 @@ fun AddEditProductDialog(
                             Icon(
                                 imageVector = Icons.Default.Image,
                                 contentDescription = null,
-                                tint = Color(0xFF9CA3AF),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.size(32.dp)
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = "Paste image link above for live preview",
-                                style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF9CA3AF))
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             )
                         }
                     }
@@ -261,14 +271,17 @@ fun AddEditProductDialog(
                     )
                 },
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
             ) {
                 Text("Save Product", fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = Color(0xFF6B7280))
+                Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     )

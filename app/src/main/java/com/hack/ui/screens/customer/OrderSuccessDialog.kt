@@ -28,14 +28,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.hack.ui.theme.GreenContainer
-import com.hack.ui.theme.GreenDark
-import com.hack.ui.theme.GreenPrimary
 
 @Composable
 fun OrderSuccessDialog(
@@ -55,7 +50,7 @@ fun OrderSuccessDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = RoundedCornerShape(24.dp),
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.surface,
         title = null,
         text = {
             Column(
@@ -68,7 +63,7 @@ fun OrderSuccessDialog(
                 // Success Badge Animation
                 Surface(
                     shape = CircleShape,
-                    color = GreenContainer,
+                    color = MaterialTheme.colorScheme.primaryContainer,
                     modifier = Modifier
                         .size(80.dp)
                         .scale(scale.value)
@@ -77,7 +72,7 @@ fun OrderSuccessDialog(
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = "Success",
-                            tint = GreenPrimary,
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(44.dp)
                         )
                     }
@@ -87,9 +82,9 @@ fun OrderSuccessDialog(
 
                 Text(
                     text = "Order Placed!",
+                    color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.headlineMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = GreenDark
+                        fontWeight = FontWeight.Bold
                     ),
                     textAlign = TextAlign.Center
                 )
@@ -98,7 +93,8 @@ fun OrderSuccessDialog(
 
                 Text(
                     text = "Thank you for shopping with FreshCart. Your fresh groceries are being prepared.",
-                    style = MaterialTheme.typography.bodyMedium.copy(color = Color(0xFF4B5563)),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center
                 )
 
@@ -106,13 +102,13 @@ fun OrderSuccessDialog(
 
                 Surface(
                     shape = RoundedCornerShape(8.dp),
-                    color = Color(0xFFF3F4F6)
+                    color = MaterialTheme.colorScheme.surfaceVariant
                 ) {
                     Text(
                         text = "Order ID: $orderId",
+                        color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.labelMedium.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF374151)
+                            fontWeight = FontWeight.Bold
                         ),
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                     )
@@ -123,10 +119,17 @@ fun OrderSuccessDialog(
             Button(
                 onClick = onViewOrders,
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("View My Orders", fontWeight = FontWeight.Bold)
+                Text(
+                    "View My Orders",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontWeight = FontWeight.Bold
+                )
             }
         },
         dismissButton = null

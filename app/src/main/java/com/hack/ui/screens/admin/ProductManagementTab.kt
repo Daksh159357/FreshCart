@@ -28,11 +28,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -46,24 +44,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.hack.data.model.Product
-import com.hack.ui.theme.DividerColor
-import com.hack.ui.theme.GreenContainer
+import com.hack.ui.theme.BadgeStockInBg
+import com.hack.ui.theme.BadgeStockInText
+import com.hack.ui.theme.BadgeStockLowBg
+import com.hack.ui.theme.BadgeStockLowText
+import com.hack.ui.theme.BadgeStockOutBg
+import com.hack.ui.theme.BadgeStockOutText
 import com.hack.ui.theme.GreenDark
 import com.hack.ui.theme.GreenPrimary
-import com.hack.ui.theme.StockInColor
-import com.hack.ui.theme.StockLowColor
-import com.hack.ui.theme.StockOutColor
 import com.hack.ui.viewmodel.AdminViewModel
+import com.hack.util.PriceFormatter
 
 @Composable
 fun ProductManagementTab(
@@ -80,7 +78,11 @@ fun ProductManagementTab(
     var productForPriceEdit by remember { mutableStateOf<Product?>(null) }
     var newPriceInput by remember { mutableStateOf("") }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -96,13 +98,17 @@ fun ProductManagementTab(
                 ) {
                     Text(
                         text = "Store Products (${products.size})",
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.onBackground
                     )
 
                     Button(
                         onClick = { showAddDialog = true },
                         shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        )
                     ) {
                         Icon(imageVector = Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(4.dp))
@@ -117,7 +123,7 @@ fun ProductManagementTab(
                 item {
                     Surface(
                         shape = RoundedCornerShape(12.dp),
-                        color = Color(0xFFFFF3E0),
+                        color = BadgeStockLowBg,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Row(
@@ -127,7 +133,7 @@ fun ProductManagementTab(
                             Icon(
                                 imageVector = Icons.Default.WarningAmber,
                                 contentDescription = null,
-                                tint = Color(0xFFE65100),
+                                tint = BadgeStockLowText,
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(10.dp))
@@ -136,12 +142,12 @@ fun ProductManagementTab(
                                     text = "Restock Needed",
                                     style = MaterialTheme.typography.titleSmall.copy(
                                         fontWeight = FontWeight.Bold,
-                                        color = Color(0xFFE65100)
+                                        color = BadgeStockLowText
                                     )
                                 )
                                 Text(
                                     text = "${lowStockItems.size} items are out of stock or running low.",
-                                    style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF795548))
+                                    style = MaterialTheme.typography.bodySmall.copy(color = BadgeStockLowText)
                                 )
                             }
                         }
@@ -201,23 +207,37 @@ fun ProductManagementTab(
         AlertDialog(
             onDismissRequest = { productToDelete = null },
             shape = RoundedCornerShape(16.dp),
-            containerColor = Color.White,
-            title = { Text("Delete Product", fontWeight = FontWeight.Bold) },
-            text = { Text("Are you sure you want to delete '${prod.name}'? This cannot be undone.") },
+            containerColor = MaterialTheme.colorScheme.surface,
+            title = {
+                Text(
+                    text = "Delete Product",
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            },
+            text = {
+                Text(
+                    text = "Are you sure you want to delete '${prod.name}'? This cannot be undone.",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
             confirmButton = {
                 Button(
                     onClick = {
                         viewModel.deleteProduct(prod.id)
                         productToDelete = null
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFDC2626))
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = BadgeStockOutText,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
                     Text("Delete")
                 }
             },
             dismissButton = {
                 TextButton(onClick = { productToDelete = null }) {
-                    Text("Cancel", color = Color(0xFF6B7280))
+                    Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         )
@@ -228,16 +248,26 @@ fun ProductManagementTab(
         AlertDialog(
             onDismissRequest = { productForPriceEdit = null },
             shape = RoundedCornerShape(16.dp),
-            containerColor = Color.White,
-            title = { Text("Update Price", fontWeight = FontWeight.Bold) },
+            containerColor = MaterialTheme.colorScheme.surface,
+            title = {
+                Text(
+                    text = "Update Price",
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            },
             text = {
                 Column {
-                    Text("Enter new price for ${prod.name}:", style = MaterialTheme.typography.bodyMedium)
+                    Text(
+                        text = "Enter new price for ${prod.name}:",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                     Spacer(modifier = Modifier.height(12.dp))
                     OutlinedTextField(
                         value = newPriceInput,
                         onValueChange = { newPriceInput = it },
-                        label = { Text("Price (₹)") },
+                        label = { Text("Price (${PriceFormatter.CURRENCY_SYMBOL})") },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         modifier = Modifier.fillMaxWidth()
@@ -253,14 +283,17 @@ fun ProductManagementTab(
                             productForPriceEdit = null
                         }
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
                     Text("Save")
                 }
             },
             dismissButton = {
                 TextButton(onClick = { productForPriceEdit = null }) {
-                    Text("Cancel")
+                    Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         )
@@ -278,7 +311,7 @@ fun AdminProductRow(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
@@ -288,7 +321,7 @@ fun AdminProductRow(
                     modifier = Modifier
                         .size(64.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(Color(0xFFF3F4F6)),
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
                     contentAlignment = Alignment.Center
                 ) {
                     AsyncImage(
@@ -309,24 +342,36 @@ fun AdminProductRow(
                     Text(
                         text = product.name,
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1
                     )
                     Text(
                         text = product.category.ifBlank { "Uncategorized" },
-                        style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF6B7280))
+                        style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
                     )
                 }
 
                 // Edit & Delete actions
                 IconButton(onClick = onEdit) {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit", tint = GreenPrimary)
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
                 }
                 IconButton(onClick = onDelete) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete", tint = Color(0xFFDC2626))
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete",
+                        tint = BadgeStockOutText
+                    )
                 }
             }
 
-            Divider(color = DividerColor, modifier = Modifier.padding(vertical = 10.dp))
+            Divider(
+                color = MaterialTheme.colorScheme.outlineVariant,
+                modifier = Modifier.padding(vertical = 10.dp)
+            )
 
             // Inline Quick Edits Row: Price & Stock
             Row(
@@ -338,21 +383,26 @@ fun AdminProductRow(
                 Surface(
                     onClick = onQuickPriceClick,
                     shape = RoundedCornerShape(8.dp),
-                    color = Color(0xFFF3F4F6)
+                    color = MaterialTheme.colorScheme.surfaceVariant
                 ) {
                     Row(
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "₹${"%.2f".format(product.price)}",
+                            text = PriceFormatter.format(product.price),
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.ExtraBold,
-                                color = GreenDark
+                                color = MaterialTheme.colorScheme.primary
                             )
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Icon(imageVector = Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(14.dp), tint = Color(0xFF6B7280))
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = null,
+                            modifier = Modifier.size(14.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
 
@@ -360,7 +410,7 @@ fun AdminProductRow(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .background(Color(0xFFF3F4F6), RoundedCornerShape(10.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(10.dp))
                         .padding(horizontal = 4.dp, vertical = 2.dp)
                 ) {
                     IconButton(
@@ -368,20 +418,25 @@ fun AdminProductRow(
                         enabled = product.stock > 0,
                         modifier = Modifier.size(32.dp)
                     ) {
-                        Icon(imageVector = Icons.Default.Remove, contentDescription = "Decrease Stock", modifier = Modifier.size(16.dp))
+                        Icon(
+                            imageVector = Icons.Default.Remove,
+                            contentDescription = "Decrease Stock",
+                            modifier = Modifier.size(16.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
                     }
 
-                    val stockColor = when {
-                        product.isOutOfStock -> StockOutColor
-                        product.isLowStock -> StockLowColor
-                        else -> StockInColor
+                    val (stockTextColor, _) = when {
+                        product.isOutOfStock -> Pair(BadgeStockOutText, BadgeStockOutBg)
+                        product.isLowStock -> Pair(BadgeStockLowText, BadgeStockLowBg)
+                        else -> Pair(BadgeStockInText, BadgeStockInBg)
                     }
 
                     Text(
                         text = "Stock: ${product.stock}",
                         style = MaterialTheme.typography.bodyMedium.copy(
                             fontWeight = FontWeight.Bold,
-                            color = stockColor
+                            color = stockTextColor
                         ),
                         modifier = Modifier.padding(horizontal = 6.dp)
                     )
@@ -390,7 +445,12 @@ fun AdminProductRow(
                         onClick = { onQuickStockChange(1) },
                         modifier = Modifier.size(32.dp)
                     ) {
-                        Icon(imageVector = Icons.Default.Add, contentDescription = "Increase Stock", modifier = Modifier.size(16.dp))
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Increase Stock",
+                            modifier = Modifier.size(16.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 }
             }
