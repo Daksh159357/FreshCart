@@ -30,6 +30,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -42,8 +43,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -52,9 +51,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hack.ui.theme.GreenContainer
-import com.hack.ui.theme.GreenDark
-import com.hack.ui.theme.GreenPrimary
 import com.hack.ui.viewmodel.AuthScreenState
 import com.hack.ui.viewmodel.AuthViewModel
 
@@ -83,15 +79,7 @@ fun LoginScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFFE8F5E9),
-                        Color(0xFFFFFFFF),
-                        Color(0xFFF1F8E9)
-                    )
-                )
-            ),
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -106,14 +94,14 @@ fun LoginScreen(
                 modifier = Modifier
                     .size(110.dp)
                     .clip(CircleShape),
-                color = GreenPrimary,
-                shadowElevation = 8.dp
+                color = MaterialTheme.colorScheme.primary,
+                shadowElevation = 6.dp
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     Icon(
                         imageVector = Icons.Default.ShoppingCart,
                         contentDescription = "FreshCart Logo",
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(56.dp)
                     )
                 }
@@ -127,7 +115,7 @@ fun LoginScreen(
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontSize = 34.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    color = GreenDark
+                    color = MaterialTheme.colorScheme.primary
                 ),
                 textAlign = TextAlign.Center
             )
@@ -138,7 +126,7 @@ fun LoginScreen(
             Text(
                 text = "Fresh groceries, delivered to your door.",
                 style = MaterialTheme.typography.bodyLarge.copy(
-                    color = Color(0xFF4A554A),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 16.sp
                 ),
                 textAlign = TextAlign.Center
@@ -154,19 +142,21 @@ fun LoginScreen(
                     .height(56.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = GreenPrimary,
-                    contentColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 ),
-                elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(22.dp)
                 )
                 Spacer(modifier = Modifier.size(10.dp))
                 Text(
                     text = "Continue as Customer",
+                    color = MaterialTheme.colorScheme.onPrimary,
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
@@ -188,18 +178,19 @@ fun LoginScreen(
                     .height(56.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = GreenDark
+                    contentColor = MaterialTheme.colorScheme.primary
                 )
             ) {
                 Icon(
                     imageVector = Icons.Default.AdminPanelSettings,
                     contentDescription = null,
                     modifier = Modifier.size(22.dp),
-                    tint = GreenDark
+                    tint = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.size(10.dp))
                 Text(
                     text = "Admin Login",
+                    color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp
@@ -222,13 +213,13 @@ fun LoginScreen(
                 }
             },
             shape = RoundedCornerShape(20.dp),
-            containerColor = Color.White,
+            containerColor = MaterialTheme.colorScheme.surface,
             title = {
                 Text(
                     text = "Admin Verification",
+                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = GreenDark
+                        fontWeight = FontWeight.Bold
                     )
                 )
             },
@@ -236,7 +227,8 @@ fun LoginScreen(
                 Column {
                     Text(
                         text = "Enter your store administration key to proceed.",
-                        style = MaterialTheme.typography.bodyMedium.copy(color = Color(0xFF5A625A))
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        style = MaterialTheme.typography.bodyMedium
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -251,13 +243,18 @@ fun LoginScreen(
                         label = { Text("Password") },
                         singleLine = true,
                         leadingIcon = {
-                            Icon(imageVector = Icons.Default.Lock, contentDescription = null)
+                            Icon(
+                                imageVector = Icons.Default.Lock,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         },
                         trailingIcon = {
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                                 Icon(
                                     imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                                    contentDescription = "Toggle password visibility"
+                                    contentDescription = "Toggle password visibility",
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         },
@@ -275,7 +272,13 @@ fun LoginScreen(
                         ),
                         isError = errorMessage != null,
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp)
+                        shape = RoundedCornerShape(12.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outline
+                        )
                     )
 
                     if (errorMessage != null) {
@@ -293,16 +296,23 @@ fun LoginScreen(
                     onClick = { viewModel.loginAsAdmin(adminPasswordInput) },
                     enabled = adminPasswordInput.isNotBlank() && !isLoading,
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
                     if (isLoading) {
                         CircularProgressIndicator(
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.size(18.dp),
                             strokeWidth = 2.dp
                         )
                     } else {
-                        Text("Login", fontWeight = FontWeight.Bold)
+                        Text(
+                            "Login",
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             },
@@ -314,7 +324,10 @@ fun LoginScreen(
                     },
                     enabled = !isLoading
                 ) {
-                    Text("Cancel", color = Color(0xFF6B7280))
+                    Text(
+                        "Cancel",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
         )

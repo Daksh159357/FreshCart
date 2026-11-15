@@ -1,47 +1,32 @@
 package com.hack.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 
-private val LightColorScheme = lightColorScheme(
+private val AppColorScheme = lightColorScheme(
     primary = GreenPrimary,
-    onPrimary = Color.White,
+    onPrimary = GreenOnPrimary,
     primaryContainer = GreenContainer,
     onPrimaryContainer = GreenOnContainer,
     secondary = AmberAccent,
-    onSecondary = Color.White,
+    onSecondary = AmberOnAccent,
     background = ScreenBackground,
-    onBackground = TextPrimary,
-    surface = CardBackground,
-    onSurface = TextPrimary,
-    surfaceVariant = Color(0xFFF0F4F0),
-    onSurfaceVariant = TextSecondary,
-    outline = DividerColor
-)
-
-private val DarkColorScheme = darkColorScheme(
-    primary = GreenLight,
-    onPrimary = Color.Black,
-    primaryContainer = GreenDark,
-    onPrimaryContainer = GreenContainer,
-    secondary = AmberAccent,
-    background = Color(0xFF121412),
-    surface = Color(0xFF1E221E)
+    onBackground = ScreenOnBackground,
+    surface = CardSurface,
+    onSurface = TextOnSurface,
+    surfaceVariant = SurfaceVariantBg,
+    onSurfaceVariant = TextOnSurfaceVariant,
+    outline = OutlineBorder
 )
 
 @Composable
 fun FreshCartTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false, // Enforce light grocery theme for consistent contrast
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
-
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = AppColorScheme,
         typography = Typography,
         content = content
     )

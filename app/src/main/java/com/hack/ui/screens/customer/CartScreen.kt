@@ -37,7 +37,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -47,10 +46,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.hack.data.model.CartItem
-import com.hack.ui.theme.DividerColor
-import com.hack.ui.theme.GreenDark
-import com.hack.ui.theme.GreenPrimary
 import com.hack.ui.viewmodel.CustomerViewModel
+import com.hack.util.PriceFormatter
 
 @Composable
 fun CartScreen(
@@ -73,14 +70,14 @@ fun CartScreen(
             ) {
                 Surface(
                     shape = RoundedCornerShape(24.dp),
-                    color = Color(0xFFF3F4F6),
+                    color = MaterialTheme.colorScheme.surfaceVariant,
                     modifier = Modifier.size(90.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
                             imageVector = Icons.Default.RemoveShoppingCart,
                             contentDescription = null,
-                            tint = Color(0xFF9CA3AF),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(44.dp)
                         )
                     }
@@ -90,9 +87,9 @@ fun CartScreen(
 
                 Text(
                     text = "Your cart is empty",
+                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF1F2937)
+                        fontWeight = FontWeight.Bold
                     )
                 )
 
@@ -100,7 +97,8 @@ fun CartScreen(
 
                 Text(
                     text = "Fresh groceries are waiting for you — start shopping!",
-                    style = MaterialTheme.typography.bodyMedium.copy(color = Color(0xFF6B7280)),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center
                 )
 
@@ -109,11 +107,23 @@ fun CartScreen(
                 Button(
                     onClick = onNavigateToShop,
                     shape = RoundedCornerShape(14.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
-                    Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Icon(
+                        imageVector = Icons.Default.ShoppingCart,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(18.dp)
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Explore Groceries", fontWeight = FontWeight.Bold)
+                    Text(
+                        "Explore Groceries",
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }
@@ -121,7 +131,7 @@ fun CartScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF8FAF8))
+                .background(MaterialTheme.colorScheme.background)
         ) {
             // Header
             Row(
@@ -133,6 +143,7 @@ fun CartScreen(
             ) {
                 Text(
                     text = "Shopping Cart (${cartItems.sumOf { it.quantity }})",
+                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                 )
 
@@ -140,7 +151,7 @@ fun CartScreen(
                     Icon(
                         imageVector = Icons.Default.DeleteOutline,
                         contentDescription = "Clear Cart",
-                        tint = Color(0xFFEF4444)
+                        tint = MaterialTheme.colorScheme.error
                     )
                 }
             }
@@ -166,7 +177,7 @@ fun CartScreen(
             // Checkout Footer
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.surface,
                 shadowElevation = 12.dp,
                 shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
             ) {
@@ -181,10 +192,12 @@ fun CartScreen(
                     ) {
                         Text(
                             text = "Subtotal",
-                            style = MaterialTheme.typography.bodyLarge.copy(color = Color(0xFF6B7280))
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.bodyLarge
                         )
                         Text(
-                            text = "₹${"%.2f".format(subtotal)}",
+                            text = PriceFormatter.format(subtotal),
+                            color = MaterialTheme.colorScheme.onSurface,
                             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
                         )
                     }
@@ -197,19 +210,20 @@ fun CartScreen(
                     ) {
                         Text(
                             text = "Delivery Fee",
-                            style = MaterialTheme.typography.bodyLarge.copy(color = Color(0xFF6B7280))
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            style = MaterialTheme.typography.bodyLarge
                         )
                         Text(
                             text = "FREE",
+                            color = MaterialTheme.colorScheme.primary,
                             style = MaterialTheme.typography.bodyLarge.copy(
-                                fontWeight = FontWeight.Bold,
-                                color = GreenDark
+                                fontWeight = FontWeight.Bold
                             )
                         )
                     }
 
                     Divider(
-                        color = DividerColor,
+                        color = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f),
                         modifier = Modifier.padding(vertical = 12.dp)
                     )
 
@@ -220,13 +234,14 @@ fun CartScreen(
                     ) {
                         Text(
                             text = "Total Amount",
+                            color = MaterialTheme.colorScheme.onSurface,
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                         )
                         Text(
-                            text = "₹${"%.2f".format(subtotal)}",
+                            text = PriceFormatter.format(subtotal),
+                            color = MaterialTheme.colorScheme.primary,
                             style = MaterialTheme.typography.headlineMedium.copy(
-                                fontWeight = FontWeight.ExtraBold,
-                                color = GreenDark
+                                fontWeight = FontWeight.ExtraBold
                             )
                         )
                     }
@@ -239,10 +254,14 @@ fun CartScreen(
                             .fillMaxWidth()
                             .height(54.dp),
                         shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        )
                     ) {
                         Text(
-                            text = "Place Order • ₹${"%.2f".format(subtotal)}",
+                            text = "Place Order • ${PriceFormatter.format(subtotal)}",
+                            color = MaterialTheme.colorScheme.onPrimary,
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp
@@ -265,7 +284,7 @@ fun CartItemRow(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
@@ -279,7 +298,7 @@ fun CartItemRow(
                 modifier = Modifier
                     .size(72.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFFF3F4F6)),
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center
             ) {
                 AsyncImage(
@@ -299,6 +318,7 @@ fun CartItemRow(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = item.product.name,
+                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
                         fontSize = 15.sp
@@ -309,17 +329,18 @@ fun CartItemRow(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "₹${"%.2f".format(item.product.price)} each",
-                    style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF6B7280))
+                    text = "${PriceFormatter.format(item.product.price)} each",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodySmall
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "₹${"%.2f".format(item.lineTotal)}",
+                    text = PriceFormatter.format(item.lineTotal),
+                    color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.ExtraBold,
-                        color = GreenDark
+                        fontWeight = FontWeight.ExtraBold
                     )
                 )
             }
@@ -328,18 +349,24 @@ fun CartItemRow(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .background(Color(0xFFF3F4F6), RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(10.dp))
                     .padding(horizontal = 4.dp, vertical = 2.dp)
             ) {
                 IconButton(
                     onClick = onDecrement,
                     modifier = Modifier.size(32.dp)
                 ) {
-                    Icon(imageVector = Icons.Default.Remove, contentDescription = "Decrease", modifier = Modifier.size(16.dp))
+                    Icon(
+                        imageVector = Icons.Default.Remove,
+                        contentDescription = "Decrease",
+                        tint = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.size(16.dp)
+                    )
                 }
 
                 Text(
                     text = "${item.quantity}",
+                    color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
@@ -348,7 +375,12 @@ fun CartItemRow(
                     onClick = onIncrement,
                     modifier = Modifier.size(32.dp)
                 ) {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Increase", modifier = Modifier.size(16.dp))
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Increase",
+                        tint = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.size(16.dp)
+                    )
                 }
             }
         }
