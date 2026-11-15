@@ -146,7 +146,7 @@ fun ProductDetailSheet(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "$${"%.2f".format(product.price)}",
+                    text = "₹${"%.2f".format(product.price)}",
                     style = MaterialTheme.typography.headlineMedium.copy(
                         fontWeight = FontWeight.ExtraBold,
                         color = GreenDark
@@ -258,7 +258,7 @@ fun ProductDetailSheet(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Add to Cart • $${"%.2f".format(product.price * quantity)}",
+                        text = "Add to Cart • ₹${"%.2f".format(product.price * quantity)}",
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                     )
                 }

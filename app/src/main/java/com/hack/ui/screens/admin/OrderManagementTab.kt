@@ -193,7 +193,7 @@ fun AdminOrderCard(
                         style = MaterialTheme.typography.bodyMedium.copy(color = Color(0xFF374151))
                     )
                     Text(
-                        text = "$${"%.2f".format(item.price * item.qty)}",
+                        text = "₹${"%.2f".format(item.price * item.qty)}",
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
                     )
                 }
@@ -213,7 +213,7 @@ fun AdminOrderCard(
                         style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF6B7280))
                     )
                     Text(
-                        text = "$${"%.2f".format(order.total)}",
+                        text = "₹${"%.2f".format(order.total)}",
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.ExtraBold,
                             color = GreenDark

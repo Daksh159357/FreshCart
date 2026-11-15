@@ -205,7 +205,7 @@ fun CustomerOrderCard(
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "$${"%.2f".format(order.total)}",
+                        text = "₹${"%.2f".format(order.total)}",
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.ExtraBold,
                             color = GreenDark
@@ -307,7 +307,7 @@ fun OrderDetailDialog(
                             modifier = Modifier.weight(1f)
                         )
                         Text(
-                            text = "$${"%.2f".format(item.price * item.qty)}",
+                            text = "₹${"%.2f".format(item.price * item.qty)}",
                             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                         )
                     }
@@ -324,7 +324,7 @@ fun OrderDetailDialog(
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                     )
                     Text(
-                        text = "$${"%.2f".format(order.total)}",
+                        text = "₹${"%.2f".format(order.total)}",
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.ExtraBold,
                             color = GreenDark

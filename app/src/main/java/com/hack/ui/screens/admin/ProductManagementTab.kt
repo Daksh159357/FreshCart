@@ -237,7 +237,7 @@ fun ProductManagementTab(
                     OutlinedTextField(
                         value = newPriceInput,
                         onValueChange = { newPriceInput = it },
-                        label = { Text("Price ($)") },
+                        label = { Text("Price (₹)") },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         modifier = Modifier.fillMaxWidth()
@@ -345,7 +345,7 @@ fun AdminProductRow(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "$${"%.2f".format(product.price)}",
+                            text = "₹${"%.2f".format(product.price)}",
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.ExtraBold,
                                 color = GreenDark

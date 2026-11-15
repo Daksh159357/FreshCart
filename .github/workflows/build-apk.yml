@@ -48,7 +48,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create v1.0.0 build-artifacts/FreshCart-v1.0.apk \
-            --title "FreshCart v1.0.0 — Production Ready APK" \
-            --notes "FreshCart Grocery Buying App for Android. Built via GitHub Actions CI/CD." \
-            --target main || echo "Release creation attempted"
+          gh release create v1.0.1 build-artifacts/FreshCart-v1.0.apk \
+            --title "FreshCart v1.0.1 — Indian Rupee (₹) Edition" \
+            --notes "FreshCart Grocery Buying App for Android with Indian Rupee (₹) currency support and live Firebase Realtime sync. Built via GitHub Actions CI/CD." \
+            --target main || gh release upload v1.0.1 build-artifacts/FreshCart-v1.0.apk --clobber

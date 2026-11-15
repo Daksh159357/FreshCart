@@ -142,7 +142,7 @@ fun AddEditProductDialog(
                     OutlinedTextField(
                         value = priceStr,
                         onValueChange = { priceStr = it },
-                        label = { Text("Price ($) *") },
+                        label = { Text("Price (₹) *") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         singleLine = true,
                         modifier = Modifier.weight(1f),

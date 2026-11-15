@@ -184,7 +184,7 @@ fun CartScreen(
                             style = MaterialTheme.typography.bodyLarge.copy(color = Color(0xFF6B7280))
                         )
                         Text(
-                            text = "$${"%.2f".format(subtotal)}",
+                            text = "₹${"%.2f".format(subtotal)}",
                             style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
                         )
                     }
@@ -223,7 +223,7 @@ fun CartScreen(
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                         )
                         Text(
-                            text = "$${"%.2f".format(subtotal)}",
+                            text = "₹${"%.2f".format(subtotal)}",
                             style = MaterialTheme.typography.headlineMedium.copy(
                                 fontWeight = FontWeight.ExtraBold,
                                 color = GreenDark
@@ -242,7 +242,7 @@ fun CartScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary)
                     ) {
                         Text(
-                            text = "Place Order • $${"%.2f".format(subtotal)}",
+                            text = "Place Order • ₹${"%.2f".format(subtotal)}",
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp
@@ -309,14 +309,14 @@ fun CartItemRow(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "$${"%.2f".format(item.product.price)} each",
+                    text = "₹${"%.2f".format(item.product.price)} each",
                     style = MaterialTheme.typography.bodySmall.copy(color = Color(0xFF6B7280))
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "$${"%.2f".format(item.lineTotal)}",
+                    text = "₹${"%.2f".format(item.lineTotal)}",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.ExtraBold,
                         color = GreenDark
